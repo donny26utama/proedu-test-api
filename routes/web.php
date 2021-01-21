@@ -16,3 +16,26 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group(['prefix' => 'auth'], function() use ($router) {
+    $router->post('/register', 'AuthController@register');
+    $router->post('/login', 'AuthController@login');
+});
+
+$router->group(['prefix' => 'v1'], function() use ($router) {
+    $router->get('/', function () use ($router) {
+        return $router->app->version();
+    });
+
+    $router->group(['prefix' => 'seminars'], function() use ($router) {
+        $router->get('/', 'SeminarController@index');
+        $router->get('/{id}', 'SeminarController@show');
+    });
+
+    $router->group(['prefix' => 'transaction'], function() use ($router) {
+        $router->post('/order', 'TransactionController@order');
+        $router->post('/payment', 'TransactionController@payment');
+        $router->get('/{id}/status', 'TransactionController@status');
+        $router->post('/notification', 'TransactionController@notification');
+    });
+});
